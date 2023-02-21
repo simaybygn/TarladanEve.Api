@@ -7,6 +7,7 @@
         public string? Description { get; set; }
         public int? Price { get; set; }
         public string Name { get; set; }
+        public byte[] Image { get; set; }
 
         //public string CreatedUserId { get; set; }
 

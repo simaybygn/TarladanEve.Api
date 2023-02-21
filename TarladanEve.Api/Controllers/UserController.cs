@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TarladanEve.Api.Data;
 using TarladanEve.Api.Models.User;
 using TarladanEve.Api.Models.Request.User;
+using Azure.Core;
 
 namespace TarladanEve.Api.Controllers
 {
@@ -61,6 +62,30 @@ namespace TarladanEve.Api.Controllers
                 }
             }
             catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet(Name = "GetSellers")]
+        public ActionResult GetSellers()
+        {
+            try
+            {
+                var _sellers = _context.Users
+                    .Where(f => f.UserType == 0).ToList();
+
+                if (_sellers != null)
+                {
+                    return Ok(_sellers);
+                }
+                else
+                {
+                    return BadRequest("Bu bilgi ile kayýtlý kullanýcý bulunamadý !");
+                }
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

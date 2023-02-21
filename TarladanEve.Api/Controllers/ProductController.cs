@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
 using TarladanEve.Api.Data;
 using TarladanEve.Api.Models;
 using TarladanEve.Api.Models.Request.Product;
@@ -72,37 +73,53 @@ namespace TarladanEve.Api.Controllers
             //}
 
             [HttpPost(Name = "CreateProduct")]
-            public ActionResult CreateProduct(CreateProductRequest _request)
+            public ActionResult CreateProduct(CreateProductRequest _request, IFormFile file)
             {
                 try
                 {
-                    Product _product = _context.Products
+
+                    if (file != null && file.Length > 0)
+                    {
+                        byte[] binaryData = null;
+
+                        using (var binaryReader = new BinaryReader(file.OpenReadStream()))
+                        {
+                            binaryData = binaryReader.ReadBytes((int)file.Length);
+                        }
+
+
+                        Product _product = _context.Products
                         .Where(f => f.Name == _request.Name
                                   && f.Type == _request.Type
                                   && f.Description == _request.Description
                                   && f.Price == _request.Price
-                        //&& f.CreatedUserId == _request.CreatedUserId
                         ).FirstOrDefault();
 
-                    if (_product == null) 
-                    {
-                         Product _newProduct = new Product();
+                        if (_product == null)
+                        {
+                            Product _newProduct = new Product
+                            {
+                                Id = Guid.NewGuid(),
+                                Type = _request.Type,
+                                Description = _request.Description,
+                                Price = _request.Price,
+                                Name = _request.Name,
+                                Image = binaryData
+                            };
 
-                        _newProduct.Id = Guid.NewGuid();
-                        _newProduct.Type = _request.Type;
-                        _newProduct.Description = _request.Description;
-                        _newProduct.Price = _request.Price;
-                        _newProduct.Name = _request.Name;
-                        //_newProduct.CreatedUserId = _request.CreatedUserId;
 
-                        _context.Products.Add(_newProduct);
-                        _context.SaveChanges();
+                            _context.Products.Add(_newProduct);
+                            _context.SaveChangesAsync();
 
-                        return Ok(_newProduct.Id);
-                    }
+                            return Ok(_newProduct.Id);
+                        }
+                        else
+                        {
+                            return BadRequest("Bu bilgiler ile bir ürün mevcut !");
+                        } }
                     else
                     {
-                        return BadRequest("Bu bilgiler ile bir ürün mevcut !");
+                        return BadRequest("Dosya yolu bulunamadı!");
                     }
                 }
                 catch(Exception ex)
