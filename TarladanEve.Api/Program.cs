@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o=>o.SwaggerDoc("v1",new Microsoft.OpenApi.Models.OpenApiInfo
 {
-    Title ="MyApi",
+    Title ="MühTas2 Projesi",
     Version ="V1",
     Description="Des1"
 }));
@@ -21,7 +21,7 @@ builder.Services.AddSwaggerGen(o=>o.SwaggerDoc("v1",new Microsoft.OpenApi.Models
 ////Veri tabaný ayarlarý
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>
-      options.UseSqlServer(connectionString));
+      options.UseNpgsql(connectionString));
 builder.Services.AddCors();
 
 var app = builder.Build();

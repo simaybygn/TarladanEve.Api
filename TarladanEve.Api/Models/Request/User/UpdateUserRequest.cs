@@ -2,6 +2,6 @@
 {
     public class UpdateUserRequest : CreateUserRequest
     {
-
+        public Guid Id { get; set; }
     }
 }

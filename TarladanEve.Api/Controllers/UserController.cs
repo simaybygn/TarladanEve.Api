@@ -4,6 +4,7 @@ using TarladanEve.Api.Data;
 using TarladanEve.Api.Models.User;
 using TarladanEve.Api.Models.Request.User;
 using Azure.Core;
+using MuhTas2.Api.Models.Request.User;
 
 namespace TarladanEve.Api.Controllers
 {
@@ -44,7 +45,7 @@ namespace TarladanEve.Api.Controllers
 
 
         [HttpPost(Name = "GetUsersByName")]
-        public ActionResult GetUsersByName(GetDeleteUserRequest _request)
+        public ActionResult GetUsersByName(GetUserRequest _request)
         {
             try
             {
@@ -140,7 +141,7 @@ namespace TarladanEve.Api.Controllers
             try
             {
                 User _user = _context.Users
-                  .Where(f => f.UserName == _request.UserName)
+                  .Where(f => f.Id == _request.Id)
                   .FirstOrDefault();
 
                 if (_user != null)
@@ -172,13 +173,12 @@ namespace TarladanEve.Api.Controllers
         }
 
         [HttpPost(Name = "DeleteUser")]
-        public ActionResult DeleteUser(GetDeleteUserRequest _request)
+        public ActionResult DeleteUser(DeleteUserRequest _request)
         {
             try
             {
                 var _user = _context.Users
-                    .Where(f => f.UserName == _request.UserName
-                              || (f.Name == _request.Name && f.Surname == _request.Surname)).FirstOrDefault();
+                    .Where(f => f.Id == _request.Id).FirstOrDefault();
 
                 if (_user != null)
                 {

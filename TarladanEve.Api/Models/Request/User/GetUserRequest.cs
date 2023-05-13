@@ -1,6 +1,6 @@
 ﻿namespace TarladanEve.Api.Models.Request.User
 {
-    public class GetDeleteUserRequest
+    public class GetUserRequest
     {
         public string UserName { get; set; }
 

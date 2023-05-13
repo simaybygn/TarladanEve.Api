@@ -2,12 +2,10 @@
 {
     public class UpdateProductRequest 
     {
+        public Guid Id { get; set; }
         public int Type { get; set; }
         public string ? Description { get; set; }
         public int ? Price { get; set; }
         public string Name { get; set; }
-        public IFormFile Image { get; set; }
-
-        //public Guid CreatedUserId { get; set; }
     }
 }

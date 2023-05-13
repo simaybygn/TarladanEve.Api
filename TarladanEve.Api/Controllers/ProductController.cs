@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using MuhTas2.Api.Models.Request.Product;
 using System.Security.Cryptography;
 using TarladanEve.Api.Data;
 using TarladanEve.Api.Models;
@@ -48,45 +49,12 @@ namespace TarladanEve.Api.Controllers
             }
 
 
-            //[HttpPost(Name = "GetProductsByCreatedIdAndName")]
-            //public ActionResult GetProductsByCreatedIdAndName(GetAndDeleteProductRequest _request)
-            //{
-            //    try
-            //    {
-            //        var _products = _context.Products
-            //            .Where(f => f.Name == _request.Name
-            //                      || (f.CreatedUserName == _request.CreatedUserName).ToList();
-
-            //        if (_products != null)
-            //        {
-            //            return Ok(_products);
-            //        }
-            //        else
-            //        {
-            //            return BadRequest("Bu bilgi ile kayıtlı ürün bulunamadı !");
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return BadRequest(ex.Message);
-            //    }
-            //}
 
             [HttpPost(Name = "CreateProduct")]
-            public ActionResult CreateProduct(CreateProductRequest _request, IFormFile file)
+            public ActionResult CreateProduct(CreateProductRequest _request)
             {
                 try
                 {
-
-                    if (file != null && file.Length > 0)
-                    {
-                        byte[] binaryData = null;
-
-                        using (var binaryReader = new BinaryReader(file.OpenReadStream()))
-                        {
-                            binaryData = binaryReader.ReadBytes((int)file.Length);
-                        }
-
 
                         Product _product = _context.Products
                         .Where(f => f.Name == _request.Name
@@ -103,8 +71,7 @@ namespace TarladanEve.Api.Controllers
                                 Type = _request.Type,
                                 Description = _request.Description,
                                 Price = _request.Price,
-                                Name = _request.Name,
-                                Image = binaryData
+                                Name = _request.Name
                             };
 
 
@@ -116,11 +83,7 @@ namespace TarladanEve.Api.Controllers
                         else
                         {
                             return BadRequest("Bu bilgiler ile bir ürün mevcut !");
-                        } }
-                    else
-                    {
-                        return BadRequest("Dosya yolu bulunamadı!");
-                    }
+                        }
                 }
                 catch(Exception ex)
                 {
@@ -137,7 +100,6 @@ namespace TarladanEve.Api.Controllers
                     Product _product = _context.Products
                           .Where(f => f.Name == _request.Name
                                       && f.Type == _request.Type
-                                    //&& f.CreatedUserId == _request.CreatedUserId
                                    ).FirstOrDefault();
 
                     if(_product != null)
@@ -164,7 +126,7 @@ namespace TarladanEve.Api.Controllers
             }
 
             [HttpPost(Name = "DeleteProduct")]
-            public ActionResult DeleteProduct(GetAndDeleteProductRequest _request)
+            public ActionResult DeleteProduct(DeleteProductRequest _request)
             {
                 try
                 {
